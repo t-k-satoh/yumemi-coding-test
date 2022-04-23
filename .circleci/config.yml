@@ -55,7 +55,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run:
           name: Test
-          command: yarn test
+          command: yarn test:once
       - save_yarn
 
   build:
