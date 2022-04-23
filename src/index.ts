@@ -1,1 +1,1 @@
-export const testFunction = (value: string) => value;
+export const testFunction = (value: string) => value
