@@ -54,7 +54,7 @@ jobs:
       - restore_yarn
       - run: yarn install --frozen-lockfile
       - run:
-          name: Lint
+          name: Test
           command: yarn test
       - save_yarn
 
