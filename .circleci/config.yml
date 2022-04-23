@@ -1,26 +1,85 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
+orbs:
+  browser-tools: circleci/browser-tools@1.2.5
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
-jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+executors:
+  default:
+    working_directory: ~/workspace
     docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+      - image: node:17.8.0
+
+commands:
+  restore_yarn:
+    steps:
+      - restore_cache:
+          name: Restore Yarn dependencies
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+
+  save_yarn:
+    steps:
+      - save_cache:
+          name: Cache Yarn dependencies
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/workspace/node_modules
+
+jobs:
+  setup:
+    executor:
+      name: default
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+      - save_yarn
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  lint:
+    executor:
+      name: default
+    steps:
+      - checkout
+      - restore_yarn
+      - run: yarn install --frozen-lockfile
+      - run:
+          name: Lint
+          command: yarn lint
+      - save_yarn
+
+  test:
+    executor:
+      name: default
+    steps:
+      - checkout
+      - restore_yarn
+      - run: yarn install --frozen-lockfile
+      - run:
+          name: Lint
+          command: yarn test
+      - save_yarn
+
+  build:
+    executor:
+      name: default
+    steps:
+      - checkout
+      - restore_yarn
+      - run: yarn install --frozen-lockfile
+      - run:
+          name: Build
+          command: yarn build
+      - save_yarn
+
 workflows:
-  say-hello-workflow:
+  pull-request:
     jobs:
-      - say-hello
+      - setup
+      - lint:
+          requires:
+            - setup
+      - test:
+          requires:
+            - lint
+      - build:
+          requires:
+            - test
