@@ -1,5 +1,6 @@
 import { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
+import { PrefecturesRepository } from '../src/data/repository/prefectures/repository'
 
 const Home: NextPage = () => {
   return (
@@ -12,6 +13,11 @@ const Home: NextPage = () => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
+  const prefecturesRepository = new PrefecturesRepository()
+  const prefectures = await prefecturesRepository.getPrefectures()
+
+  console.log(prefectures)
+
   return {
     props: {},
   }
