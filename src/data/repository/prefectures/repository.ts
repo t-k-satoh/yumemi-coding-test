@@ -1,11 +1,18 @@
+import { AxiosError } from 'axios'
 import { PrefectureRepositoryInterface } from '../../../domain/repository-interface/prefectures'
-import { getPrefecture } from '../../client/prefectures'
+import { client } from '../../client'
 
 export class PrefecturesRepository implements PrefectureRepositoryInterface {
+  private client: typeof client
+
+  constructor(_client: typeof client) {
+    this.client = _client
+  }
+
   public getPrefectures: PrefectureRepositoryInterface['getPrefectures'] =
     async () => {
       try {
-        const { data } = await getPrefecture()
+        const { data } = await this.client.prefectures.getPrefecture()
 
         if (data === '400' || data === '404') {
           return {
@@ -26,9 +33,11 @@ export class PrefecturesRepository implements PrefectureRepositoryInterface {
           data: data.result,
         }
       } catch (error) {
+        const _error = error as AxiosError
+
         return {
           success: false,
-          details: error,
+          details: `${_error.response.status} ${_error.response.statusText}`,
         }
       }
     }

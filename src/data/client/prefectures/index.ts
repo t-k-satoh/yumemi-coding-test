@@ -1,4 +1,4 @@
-import { instance } from '..'
+import { instance } from '../instance'
 import { APIResponse } from '../interface'
 
 interface Prefecture {

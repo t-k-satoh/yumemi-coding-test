@@ -1,6 +1,5 @@
-import axios from 'axios'
+import { getPrefecture } from './prefectures'
 
-export const instance = axios.create({
-  baseURL: 'https://opendata.resas-portal.go.jp',
-  headers: { 'X-API-KEY': process.env.API_KEY },
-})
+export const client = {
+  prefectures: { getPrefecture },
+}
