@@ -28,6 +28,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const queryClient = new QueryClient()
   const config = createAPIConfig()
 
+  console.log(config)
+
   await queryClient.prefetchQuery([KEYS.GET_PREFECTURES], () =>
     prefecturesUseCase.getPrefectures(config)
   )
