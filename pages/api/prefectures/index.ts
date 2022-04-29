@@ -1,3 +1,3 @@
-import { prefectures } from './prefectures'
+import { prefectures } from '../../../src/api/prefectures'
 
 export default prefectures

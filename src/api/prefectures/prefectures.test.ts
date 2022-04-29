@@ -6,7 +6,7 @@ import { result } from '../../../src/mocks/prefectures/get/constants'
 import { Error } from '../../../src/mocks/types'
 import { Error as ErrorResponse } from '../error'
 
-import handler from '.'
+import { prefectures as handler } from '.'
 
 const isValidJson = (text: string) => {
   try {
