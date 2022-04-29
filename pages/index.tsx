@@ -1,11 +1,12 @@
-import { NextPage, GetServerSideProps } from 'next'
+import type { NextPage, GetServerSideProps } from 'next'
 import Head from 'next/head'
-import { Prefecture } from '../src/domain/entity/prefectures'
+import { dehydrate, QueryClient, DehydratedState } from 'react-query'
+import { KEYS } from '../src/use-case/keys'
 import { prefecturesUseCase } from '../src/use-case/prefectures'
 import { createAPIConfig } from '../src/utils/api'
 
 interface Props {
-  prefectures: Prefecture[]
+  dehydratedState: DehydratedState
   error?: unknown
 }
 
@@ -24,21 +25,16 @@ const Home: NextPage<Props> = (props) => {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
+  const queryClient = new QueryClient()
   const config = createAPIConfig()
-  try {
-    const data = await prefecturesUseCase.getPrefectures(config)
-    return {
-      props: {
-        prefectures: data.result,
-      },
-    }
-  } catch (error) {
-    return {
-      props: {
-        prefectures: [],
-        error: { ...error, config },
-      },
-    }
+
+  await queryClient.prefetchQuery([KEYS.GET_PREFECTURES], () =>
+    prefecturesUseCase.getPrefectures(config)
+  )
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
   }
 }
 
