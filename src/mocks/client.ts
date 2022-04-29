@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { client } from '../data/client'
+import { client } from '../data/client/reas'
 import { Error } from './types'
 
 export const generateClient = (error?: Error): typeof client => {

@@ -1,44 +1,18 @@
-import { AxiosError } from 'axios'
+import { AxiosRequestConfig } from 'axios'
 import { PrefectureRepositoryInterface } from '../../../domain/repository-interface/prefectures'
-import { client } from '../../client'
+import { bffClient } from '../../client'
 
 export class PrefecturesRepository implements PrefectureRepositoryInterface {
-  private client: typeof client
+  private client: typeof bffClient
 
-  constructor(_client: typeof client) {
+  constructor(_client: typeof bffClient) {
     this.client = _client
   }
 
   public getPrefectures: PrefectureRepositoryInterface['getPrefectures'] =
-    async () => {
-      try {
-        const { data } = await this.client.prefectures.getPrefecture()
+    async (config?: AxiosRequestConfig) => {
+      const { data } = await this.client.prefectures.getPrefecture(config)
 
-        if (data === '400' || data === '404') {
-          return {
-            success: false,
-            details: data,
-          }
-        }
-
-        if ('statusCode' in data || 'description' in data) {
-          return {
-            success: false,
-            details: data,
-          }
-        }
-
-        return {
-          success: true,
-          data: data.result,
-        }
-      } catch (error) {
-        const _error = error as AxiosError
-
-        return {
-          success: false,
-          details: `${_error.response.status} ${_error.response.statusText}`,
-        }
-      }
+      return data.result
     }
 }

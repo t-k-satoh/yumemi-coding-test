@@ -1,7 +1,10 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import * as React from 'react'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { GlobalStyle } from '../src/styles/global'
+
+const queryClient = new QueryClient()
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -11,7 +14,9 @@ const App = ({ Component, pageProps }: AppProps) => {
       </Head>
       {/* @ts-ignore */}
       <GlobalStyle />
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
     </>
   )
 }

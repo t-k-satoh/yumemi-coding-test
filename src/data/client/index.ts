@@ -1,5 +1,4 @@
-import { getPrefecture } from './prefectures'
+import { client as bffClient } from './bff'
+import { client as reasClient } from './reas'
 
-export const client = {
-  prefectures: { getPrefecture },
-}
+export { reasClient, bffClient }

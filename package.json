@@ -16,6 +16,7 @@
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0",
+    "react-query": "^3.38.0",
     "styled-components": "5.3.5",
     "styled-reset": "4.3.4"
   },
@@ -32,6 +33,8 @@
     "husky": "7.0.4",
     "jest": "27.5.1",
     "msw": "0.39.2",
-    "typescript": "4.6.3"
+    "node-mocks-http": "^1.11.0",
+    "typescript": "4.6.3",
+    "utility-types": "^3.10.0"
   }
 }
