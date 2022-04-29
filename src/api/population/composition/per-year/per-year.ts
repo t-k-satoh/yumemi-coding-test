@@ -2,16 +2,19 @@ import { AxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-import { reasClient } from '../../../src/data/client'
-import { badRequest, notFound, forbidden, methodNotAllowed } from '../error'
+import { reasClient } from '../../../../data/client'
+import {
+  badRequest,
+  notFound,
+  forbidden,
+  methodNotAllowed,
+} from '../../../error'
+import { isValidNumber } from './utils'
 
-const path = '/api/prefectures'
+const path = '/api/population/composition/per-year'
 
 // https://opendata.resas-portal.go.jp/docs/api/v1/detail/index.html
-export const prefectures = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
+export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {
     // [TODO] よくない実装、テスト用コードが入り込んでいる
     const error =
@@ -19,10 +22,44 @@ export const prefectures = async (
         ? { error: req.query.error }
         : undefined
 
+    if (!('pref-code' in req.query) || !('city-code' in req.query)) {
+      res.status(StatusCodes.BAD_REQUEST)
+      res.end(
+        JSON.stringify({
+          ...badRequest,
+          details: `'pref-code' or 'city-code' is missing as a parameter.`,
+        })
+      )
+      return
+    }
+
+    if (
+      !isValidNumber(req.query['pref-code']) ||
+      (req.query['city-code'] !== '-' && !isValidNumber(req.query['city-code']))
+    ) {
+      res.status(StatusCodes.BAD_REQUEST)
+      res.end(
+        JSON.stringify({
+          ...badRequest,
+          details: `'pref-code' or 'city-code' is invalid.`,
+        })
+      )
+      return
+    }
+
     try {
-      const { data } = await reasClient.prefectures.getPrefecture({
-        params: error,
-      })
+      const { data } =
+        await reasClient.population.composition.perYear.getPerYear(
+          {
+            prefCode: Number(req.query['pref-code']),
+            cityCode:
+              req.query['city-code'] === '-'
+                ? req.query['city-code']
+                : Number(req.query['city-code']),
+            addArea: String(req.query['add-area']),
+          },
+          { params: error }
+        )
 
       if (data === '400') {
         res.status(StatusCodes.BAD_REQUEST)
@@ -50,6 +87,7 @@ export const prefectures = async (
         }
 
         if (data.statusCode === '404') {
+          console.log(req)
           res.status(StatusCodes.NOT_FOUND)
           res.end(JSON.stringify({ ...notFound, details: data, path }))
           return
