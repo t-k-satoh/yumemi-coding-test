@@ -13,6 +13,6 @@ export class PrefecturesRepository implements PrefectureRepositoryInterface {
     async (config?: AxiosRequestConfig) => {
       const { data } = await this.client.prefectures.getPrefecture(config)
 
-      return data.result
+      return data
     }
 }

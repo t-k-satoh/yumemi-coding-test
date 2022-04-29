@@ -29,14 +29,14 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
     const data = await prefecturesUseCase.getPrefectures(config)
     return {
       props: {
-        prefectures: data,
+        prefectures: data.result,
       },
     }
   } catch (error) {
     return {
       props: {
         prefectures: [],
-        error,
+        error: { ...error, config },
       },
     }
   }

@@ -5,17 +5,13 @@ import { PromiseType } from 'utility-types'
 
 import { client } from '../../../data/client/bff'
 import { PrefecturesRepository } from '../../../data/repository/prefectures'
+import { Error } from '../../../domain/entity/error'
 
 import { KEYS } from '../../keys'
 
 type Data = PromiseType<ReturnType<PrefecturesRepository['getPrefectures']>>
 
-type Options = UseQueryOptions<
-  Data,
-  undefined,
-  Data,
-  [typeof KEYS.GET_PREFECTURES]
->
+type Options = UseQueryOptions<Data, Error, Data, [typeof KEYS.GET_PREFECTURES]>
 
 export const useGetPrefectures = (initialOptions?: Options) => {
   const prefecturesRepository = new PrefecturesRepository(client)
@@ -29,7 +25,7 @@ export const useGetPrefectures = (initialOptions?: Options) => {
   }, [])
 
   return {
-    ...useQuery<Data, { error: '?' }, Data, [typeof KEYS.GET_PREFECTURES]>(
+    ...useQuery<Data, Error, Data, [typeof KEYS.GET_PREFECTURES]>(
       [KEYS.GET_PREFECTURES],
       () => prefecturesRepository.getPrefectures(),
       {
