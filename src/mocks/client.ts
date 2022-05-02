@@ -9,5 +9,13 @@ export const generateClient = (error?: Error): typeof client => {
     prefectures: {
       getPrefecture: async () => await axios.get('/prefectures', { params }),
     },
+    population: {
+      composition: {
+        perYear: {
+          getPerYear: async () =>
+            await axios.get('/population/composition/perYear', { params }),
+        },
+      },
+    },
   }
 }

@@ -87,7 +87,6 @@ export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         if (data.statusCode === '404') {
-          console.log(req)
           res.status(StatusCodes.NOT_FOUND)
           res.end(JSON.stringify({ ...notFound, details: data, path }))
           return
