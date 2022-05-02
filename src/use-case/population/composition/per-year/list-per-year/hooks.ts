@@ -10,7 +10,9 @@ import { KEYS } from '../../../../keys'
 
 type Params = Parameters<PerYearRepository['getPerYear']>[0]
 
-type Data = PromiseType<ReturnType<PerYearRepository['getPerYear']>>
+type Data = PromiseType<ReturnType<PerYearRepository['getPerYear']>> & {
+  extension: Params
+}
 
 type Options = UseQueryOptions<
   Data,
@@ -38,8 +40,15 @@ export const useListPerYear = (
           KEYS.GET_POPULATION_COMPOSITION_PERYEAR,
           { cityCode, prefCode, addArea },
         ],
-        queryFn: () =>
-          perYearRepository.getPerYear({ cityCode, prefCode, addArea }),
+        queryFn: async () => {
+          const data = await perYearRepository.getPerYear({
+            cityCode,
+            prefCode,
+            addArea,
+          })
+
+          return { ...data, extension: { cityCode, prefCode, addArea } }
+        },
       }
 
       return _options

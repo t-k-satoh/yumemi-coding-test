@@ -103,10 +103,17 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   await queryClient.prefetchQuery([KEYS.GET_PREFECTURES], () =>
     prefecturesUseCase.getPrefectures(config)
   )
-  await queryClient.prefetchQuery(
-    [KEYS.GET_POPULATION_COMPOSITION_PERYEAR, { cityCode: '-', prefCode: 11 }],
-    () => perYearUseCase.getPerYear({ cityCode: '-', prefCode: 11 }, config)
-  )
+
+  // for (let index = 1; index < 48; index++) {
+  //   await queryClient.prefetchQuery(
+  //     [
+  //       KEYS.GET_POPULATION_COMPOSITION_PERYEAR,
+  //       { cityCode: '-', prefCode: index },
+  //     ],
+  //     () =>
+  //       perYearUseCase.getPerYear({ cityCode: '-', prefCode: index }, config)
+  //   )
+  // }
 
   return {
     props: {
