@@ -24,18 +24,27 @@ const generateParams = (params: Params) => {
     ['add-area']?: string
   } = { ['pref-code']: params.prefCode, ['city-code']: params.cityCode }
 
-  if (typeof params['addArea'] === 'undefined') {
+  if (typeof params['addArea'] !== 'undefined') {
     temp['add-area'] = params['addArea']
   }
 
   return temp
 }
 
-export const getPerYear = async (params: Params, config?: AxiosRequestConfig) =>
-  await instance.get<{
+export const getPerYear = async (
+  params: Params,
+  config?: AxiosRequestConfig
+) => {
+  const configParams =
+    typeof config !== 'undefined' && typeof config.params !== 'undefined'
+      ? config.params
+      : {}
+
+  return await instance.get<{
     message: null
     result: Result
   }>('api/population/composition/per-year', {
     ...config,
-    params: { ...config.params, ...generateParams(params) },
+    params: { ...configParams, ...generateParams(params) },
   })
+}

@@ -12,26 +12,55 @@ interface Props {
 }
 
 const Home: NextPage<Props> = () => {
-  const [prefCode, setPrefCode] = React.useState<number | undefined>()
+  const [prefCodes, setPrefCodes] = React.useState<number[]>([])
 
   const { data: prefectures } = prefecturesUseCase.useGetPrefectures()
-  const { data: compositionPerYear, handleParams } =
-    perYearUseCase.useGetPerYear(
-      {
-        cityCode: '-',
-        prefCode: 13,
+
+  const { listPerYearQueries, setOptions, setParams } =
+    perYearUseCase.useListPerYear([], { enabled: false })
+
+  const result = listPerYearQueries.map(
+    (listPerYearQuery) => listPerYearQuery.data
+  )
+
+  const onChangePrefCode: React.ChangeEventHandler<HTMLInputElement> =
+    React.useCallback(
+      (e) => {
+        const newPrefCode = e.currentTarget.value
+        setOptions({ enabled: true })
+
+        if (e.currentTarget.checked) {
+          setPrefCodes((current) => {
+            const newPrefCodes = [...current, Number(newPrefCode)]
+            setParams(
+              newPrefCodes.map((_newPrefCode) => ({
+                cityCode: '-',
+                prefCode: _newPrefCode,
+              }))
+            )
+
+            return newPrefCodes
+          })
+          return
+        } else {
+          setPrefCodes((current) => {
+            const newPrefCodes = current.filter(
+              (prefCode) => prefCode !== Number(newPrefCode)
+            )
+
+            setParams(
+              newPrefCodes.map((_newPrefCode) => ({
+                cityCode: '-',
+                prefCode: _newPrefCode,
+              }))
+            )
+
+            return newPrefCodes
+          })
+        }
       },
-      { enabled: true }
+      [setOptions, setParams]
     )
-
-  const onChangePrefCode: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const newPrefCode = e.currentTarget.id
-
-    setPrefCode(Number(newPrefCode))
-    handleParams({ prefCode: Number(newPrefCode), cityCode: '-' })
-  }
-
-  console.log(compositionPerYear)
 
   if (typeof prefectures === 'undefined') {
     return null
@@ -43,14 +72,18 @@ const Home: NextPage<Props> = () => {
         <title>フロントエンドコーディング試験</title>
       </Head>
       <div>
-        {prefCode}
+        {JSON.stringify(prefCodes)}
         {prefectures.result.map((prefecture) => (
           <div key={prefecture.prefCode}>
             <label>
               <input
-                type={'radio'}
+                type={'checkbox'}
                 id={String(prefecture.prefCode)}
                 name={'prefCode'}
+                value={prefecture.prefCode}
+                checked={prefCodes.some(
+                  (prefCode) => prefCode === prefecture.prefCode
+                )}
                 onChange={onChangePrefCode}
               />
               {prefecture.prefName}
@@ -58,7 +91,7 @@ const Home: NextPage<Props> = () => {
           </div>
         ))}
       </div>
-      <div>{JSON.stringify(compositionPerYear)}</div>
+      <div>{JSON.stringify(result)}</div>
     </>
   )
 }

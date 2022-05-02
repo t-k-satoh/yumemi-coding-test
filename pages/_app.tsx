@@ -4,7 +4,13 @@ import * as React from 'react'
 import { QueryClient, QueryClientProvider, Hydrate } from 'react-query'
 import { GlobalStyle } from '../src/styles/global'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity,
+    },
+  },
+})
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
