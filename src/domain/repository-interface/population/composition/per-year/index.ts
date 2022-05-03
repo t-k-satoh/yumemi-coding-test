@@ -8,5 +8,5 @@ export interface PerYearRepositoryInterface {
   getPerYear: (
     params: Params,
     config?: AxiosRequestConfig
-  ) => Promise<{ message: null; result: Result }>
+  ) => Promise<{ message: null; result: Result; extensions: Params }>
 }

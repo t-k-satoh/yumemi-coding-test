@@ -43,6 +43,7 @@ export const getPerYear = async (
   return await instance.get<{
     message: null
     result: Result
+    extensions: Params
   }>('api/population/composition/per-year', {
     ...config,
     params: { ...configParams, ...generateParams(params) },

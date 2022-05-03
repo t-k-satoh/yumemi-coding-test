@@ -15,6 +15,8 @@ const path = '/api/population/composition/per-year'
 
 // https://opendata.resas-portal.go.jp/docs/api/v1/detail/index.html
 export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
+  res.setHeader('Content-Type', 'text/plain;charset=utf-8')
+
   if (req.method === 'GET') {
     // [TODO] よくない実装、テスト用コードが入り込んでいる
     const error =
@@ -93,9 +95,29 @@ export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
 
-      res.setHeader('Content-Type', 'text/plain;charset=utf-8')
+      const extensions: {
+        prefCode: number
+        cityCode: number | '-'
+        addArea?: string
+      } = {
+        prefCode: Number(req.query['pref-code']),
+        cityCode:
+          req.query['city-code'] === '-'
+            ? req.query['city-code']
+            : Number(req.query['city-code']),
+      }
+
+      if (typeof req.query['add-area'] !== 'undefined') {
+        extensions['addArea'] = String(req.query['add-area'])
+      }
+
       res.status(StatusCodes.OK)
-      res.end(JSON.stringify(data))
+      res.end(
+        JSON.stringify({
+          ...data,
+          extensions,
+        })
+      )
     } catch (error) {
       const _error = error as AxiosError
 

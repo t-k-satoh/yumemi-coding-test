@@ -33,7 +33,14 @@ describe('/api/population/composition/per-year', () => {
 
     const data = JSON.parse(mockRes._getData())
 
-    expect(data).toStrictEqual({ message: null, result })
+    expect(data).toStrictEqual({
+      message: null,
+      result,
+      extensions: {
+        cityCode: 11362,
+        prefCode: 11,
+      },
+    })
   })
 
   test(`${StatusCodes.BAD_REQUEST} for Invalid Params`, async () => {
