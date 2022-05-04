@@ -49,29 +49,30 @@ export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
       return
     }
 
+    const params = {
+      prefCode: Number(req.query['pref-code']),
+      cityCode:
+        req.query['city-code'] === '-'
+          ? ('-' as const)
+          : Number(req.query['city-code']),
+      addArea: String(req.query['add-area']),
+    }
+
     try {
       const { data } =
-        await reasClient.population.composition.perYear.getPerYear(
-          {
-            prefCode: Number(req.query['pref-code']),
-            cityCode:
-              req.query['city-code'] === '-'
-                ? req.query['city-code']
-                : Number(req.query['city-code']),
-            addArea: String(req.query['add-area']),
-          },
-          { params: error }
-        )
+        await reasClient.population.composition.perYear.getPerYear(params, {
+          params: error,
+        })
 
       if (data === '400') {
         res.status(StatusCodes.BAD_REQUEST)
-        res.end(JSON.stringify(badRequest))
+        res.end(JSON.stringify({ ...badRequest, details: { data, params } }))
         return
       }
 
       if (data === '404') {
         res.status(StatusCodes.NOT_FOUND)
-        res.end(JSON.stringify(notFound))
+        res.end(JSON.stringify({ ...notFound, details: { data, params } }))
         return
       }
 
@@ -90,7 +91,9 @@ export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
 
         if (data.statusCode === '404') {
           res.status(StatusCodes.NOT_FOUND)
-          res.end(JSON.stringify({ ...notFound, details: data, path }))
+          res.end(
+            JSON.stringify({ ...notFound, details: { data, params }, path })
+          )
           return
         }
       }
@@ -100,11 +103,8 @@ export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
         cityCode: number | '-'
         addArea?: string
       } = {
-        prefCode: Number(req.query['pref-code']),
-        cityCode:
-          req.query['city-code'] === '-'
-            ? req.query['city-code']
-            : Number(req.query['city-code']),
+        prefCode: params.prefCode,
+        cityCode: params.cityCode,
       }
 
       if (typeof req.query['add-area'] !== 'undefined') {
@@ -128,6 +128,7 @@ export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
           status: Number(_error.response.status),
           error: _error.response.statusText,
           message: _error.message,
+          details: { params },
         })
       )
     }

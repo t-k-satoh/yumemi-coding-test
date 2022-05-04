@@ -5,14 +5,13 @@ import { PromiseType } from 'utility-types'
 
 import { client } from '../../../../../data/client/bff'
 import { PerYearRepository } from '../../../../../data/repository/population/composition/per-year'
+import { Error } from '../../../../../domain/entity/error'
 
 import { KEYS } from '../../../../keys'
 
 type Params = Parameters<PerYearRepository['getPerYear']>[0]
 
-type Data = PromiseType<ReturnType<PerYearRepository['getPerYear']>> & {
-  extension: Params
-}
+type Data = PromiseType<ReturnType<PerYearRepository['getPerYear']>>
 
 type Options = UseQueryOptions<
   Data,
@@ -47,7 +46,7 @@ export const useListPerYear = (
             addArea,
           })
 
-          return { ...data, extension: { cityCode, prefCode, addArea } }
+          return data
         },
       }
 

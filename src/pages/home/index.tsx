@@ -35,11 +35,14 @@ const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     prefecturesUseCase.getPrefectures(config)
   )
 
-  for (const prefCode of prefCodesOnQuery) {
-    await queryClient.prefetchQuery(
-      [KEYS.GET_POPULATION_COMPOSITION_PERYEAR, { cityCode: '-', prefCode }],
-      () => perYearUseCase.getPerYear({ cityCode: '-', prefCode }, config)
-    )
+  // データ量が大きくなるので21 以下の場合のみ
+  if (prefCodesOnQuery.length < 20) {
+    for (const prefCode of prefCodesOnQuery) {
+      await queryClient.prefetchQuery(
+        [KEYS.GET_POPULATION_COMPOSITION_PERYEAR, { cityCode: '-', prefCode }],
+        () => perYearUseCase.getPerYear({ cityCode: '-', prefCode }, config)
+      )
+    }
   }
 
   return {
