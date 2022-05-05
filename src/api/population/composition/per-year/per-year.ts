@@ -55,7 +55,10 @@ export const perYear = async (req: NextApiRequest, res: NextApiResponse) => {
         req.query['city-code'] === '-'
           ? ('-' as const)
           : Number(req.query['city-code']),
-      addArea: String(req.query['add-area']),
+    }
+
+    if (typeof req.query['add-area'] !== 'undefined') {
+      params['add-area'] = req.query['add-area']
     }
 
     try {

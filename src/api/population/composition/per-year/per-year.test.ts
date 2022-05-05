@@ -123,9 +123,15 @@ describe('/api/population/composition/per-year', () => {
     expect(data.error).toBe(ReasonPhrases.NOT_FOUND)
     expect(data.message).toBe(ReasonPhrases.NOT_FOUND)
     expect(data.details).toStrictEqual({
-      description: 'The requested URL /404 was not found on this server.',
-      message: "404. That's an error.",
-      statusCode: '404',
+      data: {
+        description: 'The requested URL /404 was not found on this server.',
+        message: "404. That's an error.",
+        statusCode: '404',
+      },
+      params: {
+        cityCode: 11362,
+        prefCode: 11,
+      },
     })
   })
 
