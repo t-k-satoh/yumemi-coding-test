@@ -1,11 +1,11 @@
 import { QueryStatus } from 'react-query'
 
-import { Error } from '../../../domain/entity/error'
+import { Error } from '../../../../domain/entity/error'
 import {
   Result,
   Params,
-} from '../../../domain/entity/population/composition/per-year'
-import { Prefecture } from '../../../domain/entity/prefectures'
+} from '../../../../domain/entity/population/composition/per-year'
+import { Prefecture } from '../../../../domain/entity/prefectures'
 
 export interface Props {
   prefecturesData: Prefecture[]

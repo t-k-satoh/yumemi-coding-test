@@ -4,7 +4,7 @@ import React from 'react'
 import { Prefecture } from '../../../domain/entity/prefectures'
 import { perYearUseCase } from '../../../use-case/population/composition/per-year'
 import { prefecturesUseCase } from '../../../use-case/prefectures'
-import { Home } from '../../components/home'
+import { Home } from '../../components/pages/home'
 import { ServerSideProps, PopulationData } from './types'
 
 const HomeContainer: React.FC<ServerSideProps> = ({ prefCodesOnQuery }) => {

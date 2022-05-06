@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Chart } from '../organisms/chart'
+import { Chart } from '../../organisms/chart'
 import { colors } from './constants'
 import { defaultProps } from './default-props'
 import * as Styles from './styles'
