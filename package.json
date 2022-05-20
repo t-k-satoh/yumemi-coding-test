@@ -21,7 +21,7 @@
     "react-query": "3.38.1",
     "recharts": "2.1.9",
     "styled-components": "5.3.5",
-    "styled-reset": "4.3.4"
+    "styled-reset": "4.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",
