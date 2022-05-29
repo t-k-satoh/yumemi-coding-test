@@ -18,7 +18,7 @@
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-query": "3.38.1",
+    "react-query": "3.39.1",
     "recharts": "2.1.9",
     "styled-components": "5.3.5",
     "styled-reset": "4.3.4"
